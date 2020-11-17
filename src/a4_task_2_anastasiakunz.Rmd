@@ -13,11 +13,18 @@ library(broom)
 library(palmerpenguins)
 library(ggbeeswarm)
 library(kableExtra)
+library(here)
+library(lubridate)
 ```
 
 # Bonanza Creek Snowshoe Hares: Exploratory Report
  Anastasia Kunz
-
+ 
+```{r}
+# Read in data
+hare_data <- read_csv(here("data", "bonanza_hares.csv"))
+```
+ 
 ## 1. Overview
 Just cursory overview of what is included DO THIS LAST BUT DONT FORGET!!!!
 
@@ -32,10 +39,79 @@ Possible map and figure?? maybe
 
 ## 3. Exploratory Findings
 ### A. Annual juvenile hare trap counts
+
+```{r}
+#filter for juvenile hares and create year out of date column
+juvenile_hare_yr <- hare_data %>% 
+  filter(age == "j") %>% 
+  mutate(date_converted = mdy(date)) %>% 
+  mutate(year = year(date_converted))%>% 
+  count(year)
+
+# create visualization
+ggplot(juvenile_hare_yr, aes(x = year, y = n)) +
+  geom_col(size = 2) +
+  theme_bw()+
+  labs(
+    x = "Year",
+    y = "Juvenile Hare Count",
+    title = "Total Juvenile Hares Per Year",
+    subtitle = "1999 - 2012"
+  )
+  
+```
+
+**Figure 1.** Total juvenile hares recorded per year at all sites. 
+
+In 1999 we see the most juvenile hares trapped with a maximum count of 126 juvenile hares. However in two years, 2002 and 2009, no juvenile hares were counted. It is important to note the consistency of days each year that hares were recorded. In some years there are significantly more days in which data is recorded than in other years. In addition, age of the hares is inconsistently reported, so it is difficult to comment on population trends without age assessment of the hares that were trapped.
+
 ### B. Visualize Juvenille Hare Weights
+
+```{r}
+#juvenile hare weight by sex and site 
+juvenile_hare_weight <- hare_data %>% 
+  filter(age == "j")
+ggplot(juvenile_hare_weight, aes(x = sex, y = weight))+
+  geom_boxplot(aes(fill = sex))+
+  facet_wrap(~ grid)+
+  theme_bw()+
+  labs(
+    x = "Sex",
+    y = "Weight (g)",
+    title = "Juvenile Weight by Sex at Each Site",
+    subtitle = "1999 - 2012"
+  )
+#ADD LEGEND TITLE TO CAPITALIZE "Sex" 
+#ALSO NEED TO CHANGE SITE TITLES SEE SLACK
+#COULD ALSO ADD IN A BEESWARM HERE
+```
+
+**Figure 2.** Box and whisker plot showing female, male and NA weight. FIX THIS CAPTION
+
+
 ### C. Juvenile Weight Comparison (Male & Female)
+
+**Table 1.** 
+```{r}
+#compare mean weights for juvenile male and female hares in the study: table with mean stdev and sample size TABLE CAPTION GOES ABOVE FOR THIS ONE
+```
+
+NEED COHENS d EFFECT SIZE TWO SAMPLE T TEST AND DIFFERENCE IN MEANS 2-3 sentences
+
+```{r}
+#Cohen's d, two sample t test, differnece in means (leave out NAs)
+```
+
 ### D. Relationship Between Juvenile Weight and Hind Foot Length
-linear model here
+
+NEED EXPLORATORY GRAPHS DO: HISTOGRAM AND QQ TO COMPARE; HAVE AT THE TOP {INCLUDE = FALSE} SO IT DOESNT SHOW UP, BUT NEEDS TO BE IN THE RMD
+
+
+```{r}
+ggplot(juvenile_hare_weight, aes(x = hindft, y = weight))+
+  geom_point()
+```
+
 
 
 
