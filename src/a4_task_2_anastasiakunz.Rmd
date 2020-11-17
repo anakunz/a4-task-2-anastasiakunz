@@ -83,7 +83,7 @@ ggplot(juvenile_hare_weight, aes(x = sex, y = weight))+
   )
 #ADD LEGEND TITLE TO CAPITALIZE "Sex" 
 #ALSO NEED TO CHANGE SITE TITLES SEE SLACK
-#COULD ALSO ADD IN A BEESWARM HERE
+#COULD ALSO ADD IN A BEESWARM HERE (ON TOP)
 ```
 
 **Figure 2.** Box and whisker plot showing female, male and NA weight. FIX THIS CAPTION
@@ -109,14 +109,19 @@ NEED EXPLORATORY GRAPHS DO: HISTOGRAM AND QQ TO COMPARE; HAVE AT THE TOP {INCLUD
 
 ```{r}
 ggplot(juvenile_hare_weight, aes(x = hindft, y = weight))+
-  geom_point()
+  geom_point()+
+  geom_smooth(method = lm)
 ```
 
+**Figure 3.** 
 
+outcome of linear regression, sllope interpretation, R2 and pearsons r, what assumptions of linear regression may be a concern. how well or not well linear reg describes relationship. Worries?
 
 
 ## 4. Summary
 
+Overarching summ sentence
+  - bullet pts are good here
 
 ## 5. Citations
 
