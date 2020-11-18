@@ -50,13 +50,13 @@ juvenile_hare_yr <- hare_data %>%
 
 # create visualization
 ggplot(juvenile_hare_yr, aes(x = year, y = n)) +
-  geom_col(size = 2) +
+  geom_col(size = 2, fill = "dodgerblue2") +
   theme_bw()+
   labs(
     x = "Year",
     y = "Juvenile Hare Count",
     title = "Total Juvenile Hares Per Year",
-    subtitle = "1999 - 2012"
+    subtitle = "1998 - 2012"
   )
   
 ```
@@ -71,19 +71,23 @@ In 1999 we see the most juvenile hares trapped with a maximum count of 126 juven
 #juvenile hare weight by sex and site 
 juvenile_hare_weight <- hare_data %>% 
   filter(age == "j")
+
+grid.labs<- c("Bonanza Black Spruce", "Bonanza Mature", "Bonanza Riparian")
+names(grid.labs) <- c("bonbs", "bonmat", "bonrip")
+
 ggplot(juvenile_hare_weight, aes(x = sex, y = weight))+
   geom_boxplot(aes(fill = sex))+
-  facet_wrap(~ grid)+
+  facet_wrap(~ grid, labeller = labeller(grid = grid.labs))+
   theme_bw()+
   labs(
     x = "Sex",
     y = "Weight (g)",
     title = "Juvenile Weight by Sex at Each Site",
-    subtitle = "1999 - 2012"
-  )
-#ADD LEGEND TITLE TO CAPITALIZE "Sex" 
-#ALSO NEED TO CHANGE SITE TITLES SEE SLACK
-#COULD ALSO ADD IN A BEESWARM HERE (ON TOP)
+    subtitle = "1998 - 2012"
+  )+
+  scale_x_discrete(labels=c("f" = "Female", "m" = "Male",
+                              "NA" = "NA"))+
+  theme(legend.position = "none")
 ```
 
 **Figure 2.** Box and whisker plot showing female, male and NA weight. FIX THIS CAPTION
@@ -91,26 +95,85 @@ ggplot(juvenile_hare_weight, aes(x = sex, y = weight))+
 
 ### C. Juvenile Weight Comparison (Male & Female)
 
-**Table 1.** 
+**Table 1.**  CAPTION HERE
 ```{r}
-#compare mean weights for juvenile male and female hares in the study: table with mean stdev and sample size TABLE CAPTION GOES ABOVE FOR THIS ONE
+#compare mean weights for juvenile male and female hares in the study: table with mean stdev and sample size 
+mf_hare_weight<- juvenile_hare_weight %>% 
+  filter(sex == "f" | sex == "m") %>% 
+  mutate(sex_new = case_when(
+    sex == "m" ~ "Male",
+    sex == "f" ~ "Female"
+  )) %>% 
+  group_by(sex_new) %>% 
+  summarize(mean_g = mean(weight, na.rm = TRUE),
+            standard_deviation = sd(weight, na.rm = TRUE),
+            sample_size = n())
+mf_hare_weight %>% 
+  kable(col.names = c("Sex", "Mean Weight (g)", "Standard Deviation (g)", "Sample Size")) %>% 
+  kable_styling(full_width = FALSE)
+  
+  
 ```
 
 NEED COHENS d EFFECT SIZE TWO SAMPLE T TEST AND DIFFERENCE IN MEANS 2-3 sentences
 
 ```{r}
-#Cohen's d, two sample t test, differnece in means (leave out NAs)
+# T-Test Code
+
+m_hare <- juvenile_hare_weight %>% 
+  filter(sex == "m") %>% 
+  pull(weight)
+
+f_hare_na <-juvenile_hare_weight %>% 
+  filter(sex == "f") %>% 
+  pull(weight)
+
+f_hare <- na.omit(f_hare_na)
+
 ```
 
-### D. Relationship Between Juvenile Weight and Hind Foot Length
+```{r, include = FALSE}
+#Exploratory Graphs
+hist(m_hare) #looks pretty normal
+hist(f_hare) #looks pretty normal too
+qqnorm(m_hare) #bit of a curve, but overall pretty normal too
+qqnorm(f_hare) #normal
 
-NEED EXPLORATORY GRAPHS DO: HISTOGRAM AND QQ TO COMPARE; HAVE AT THE TOP {INCLUDE = FALSE} SO IT DOESNT SHOW UP, BUT NEEDS TO BE IN THE RMD
+# Main Takeaways: Generally normal, no glaring issues. The male hare weight distribution is perhaps a little off from a normal distribution, but a t-test should suffice for mean weight comparison.
+
+hare_ttest <- t.test(m_hare, f_hare)
+
+# Get the tidy model results to call outputs in-line: 
+hare_ttest_tidy <- tidy(hare_ttest)
+
+# hare_ttest_tidy
+
+# Find  means and std dev 
+m_weight_mean <- mean(m_hare)
+f_weight_mean <- mean(f_hare)
+m_weight_sd <- sd(m_hare)
+f_weight_sd <- sd(f_hare)
+
+# Cohen's D Effect Size
+hare_effsize <- cohen.d(m_hare, f_hare)
+
+```
+
+
+### D. Relationship Between Juvenile Weight and Hind Foot Length
 
 
 ```{r}
 ggplot(juvenile_hare_weight, aes(x = hindft, y = weight))+
   geom_point()+
-  geom_smooth(method = lm)
+  geom_smooth(method = lm, color = "dodgerblue2")+
+  theme_bw()+
+  labs(
+    x = "Hindfoot Length (mm)",
+    y = "Weight (g)",
+    title = "Relationship of Snowshoe Hare Weight and Hindfoot Length",
+    subtitle = "1998 - 2012"
+  )
 ```
 
 **Figure 3.** 
