@@ -95,7 +95,7 @@ ggplot(juvenile_hare_weight, aes(x = sex, y = weight))+
 
 ### C. Juvenile Weight Comparison (Male & Female)
 
-**Table 1.**  CAPTION HERE
+**Table 1.**  CAPTION HERE LOOK UP HOW TO GE
 ```{r}
 #compare mean weights for juvenile male and female hares in the study: table with mean stdev and sample size 
 mf_hare_weight<- juvenile_hare_weight %>% 
@@ -115,7 +115,7 @@ mf_hare_weight %>%
   
 ```
 
-NEED COHENS d EFFECT SIZE TWO SAMPLE T TEST AND DIFFERENCE IN MEANS 2-3 sentences
+
 
 ```{r}
 # T-Test Code
@@ -131,6 +131,7 @@ f_hare_na <-juvenile_hare_weight %>%
 f_hare <- na.omit(f_hare_na)
 
 ```
+
 
 ```{r, include = FALSE}
 #Exploratory Graphs
@@ -158,10 +159,10 @@ f_weight_sd <- sd(f_hare)
 hare_effsize <- cohen.d(m_hare, f_hare)
 
 ```
-
+NEED COHENS d EFFECT SIZE TWO SAMPLE T TEST AND DIFFERENCE IN MEANS 2-3 sentences HERE 
+LOOK UP HOW TO REFERENCE MODEL IN REPORT 
 
 ### D. Relationship Between Juvenile Weight and Hind Foot Length
-
 
 ```{r}
 ggplot(juvenile_hare_weight, aes(x = hindft, y = weight))+
@@ -176,7 +177,7 @@ ggplot(juvenile_hare_weight, aes(x = hindft, y = weight))+
   )
 ```
 
-**Figure 3.** 
+**Figure 3.** CAPTION HERE
 
 outcome of linear regression, sllope interpretation, R2 and pearsons r, what assumptions of linear regression may be a concern. how well or not well linear reg describes relationship. Worries?
 
